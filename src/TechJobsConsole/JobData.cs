@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -15,6 +16,13 @@ namespace TechJobsConsole
             LoadData();
             return AllJobs;
         }
+
+        public override string ToString()
+        {
+            return base.ToString();
+        }
+
+
 
         /*
          * Returns a list of all values contained in a given column,
@@ -49,12 +57,32 @@ namespace TechJobsConsole
             {
                 string aValue = row[column];
 
-                if (aValue.Contains(value))
+                if (aValue.ToLower().Contains(value))
                 {
                     jobs.Add(row);
                 }
             }
+            return jobs;
+        }
 
+        public static List<Dictionary<string, string>> FindByValue(string searchTerm)
+        {
+            // load data, if not already loaded
+            LoadData();
+
+            List<Dictionary<string, string>> jobs = new List<Dictionary<string, string>>();
+            
+            foreach (Dictionary<string, string> job in AllJobs)
+            {                
+                foreach (KeyValuePair<string, string> column in job)
+                {
+                    if (column.Value.ToLower().Contains(searchTerm))
+                    {
+                        jobs.Add(job);
+                        break;
+                    }
+                }
+            }
             return jobs;
         }
 
